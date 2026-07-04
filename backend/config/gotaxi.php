@@ -2,51 +2,20 @@
 
 return [
 
-    /*
-    |--------------------------------------------------------------------------
-    | OTP Configuration
-    |--------------------------------------------------------------------------
-    */
-
     'otp' => [
 
-        'length' => 6,
+        // OTP expiry in seconds
+        'expiry' => env('OTP_EXPIRY', 300),
 
-        'expiry' => 300,
+        // User can request OTP again after these seconds
+        'cooldown' => env('OTP_COOLDOWN', 30),
 
-        'max_attempts' => 5,
+        // Maximum OTP resend attempts
+        'max_resend' => env('OTP_MAX_RESEND', 3),
 
-        'resend_cooldown' => 30,
+        // Return OTP in API only in local environment
+        'show_in_response' => env('OTP_SHOW_IN_RESPONSE', false),
 
-        'max_resends' => 3,
-
-        'driver' => env('OTP_DRIVER', 'database'),
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | User
-    |--------------------------------------------------------------------------
-    */
-
-    'user' => [
-
-        'default_country_code' => '+91',
-
-        'default_language' => 'en',
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Ride
-    |--------------------------------------------------------------------------
-    */
-
-    'ride' => [
-
-        'search_radius' => 10,
-
-        'cancel_time' => 300,
     ],
 
 ];

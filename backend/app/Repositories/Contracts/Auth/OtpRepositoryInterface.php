@@ -22,4 +22,16 @@ interface OtpRepositoryInterface
     public function delete(OtpVerification $otp): bool;
 
     public function deleteExpired(): void;
+
+    public function findActiveOtp(
+    string $countryCode,
+    string $mobile,
+    string $purpose
+): ?OtpVerification;
+
+public function countActiveOtps(
+    string $countryCode,
+    string $mobile,
+    string $purpose
+): int;
 }

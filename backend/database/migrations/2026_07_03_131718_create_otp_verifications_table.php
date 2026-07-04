@@ -21,7 +21,7 @@ return new class extends Migration
 
     $table->string('mobile',20)->index();
 
-    $table->string('otp',10);
+    $table->string('otp',255);
 
     $table->string('purpose',30)->index();
 

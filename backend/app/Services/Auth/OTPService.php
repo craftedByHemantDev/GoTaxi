@@ -6,6 +6,10 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use App\Repositories\Contracts\Auth\OtpRepositoryInterface;
 use App\Services\Contracts\Auth\OTPServiceInterface;
+use Illuminate\Support\Facades\Hash;
+use App\Core\Exceptions\ApiException;
+use App\Enums\Core\ErrorCode;
+
 
 class OTPService implements OTPServiceInterface
 {
@@ -22,55 +26,71 @@ class OTPService implements OTPServiceInterface
         string|null $userAgent = null
     ): array {
 
-        DB::transaction(function () use (
-            $countryCode,
-            $mobile,
-            $purpose,
-            $ipAddress,
-            $userAgent,
-            &$otp
-        ) {
+        $plainOtp = (string) random_int(100000, 999999);
 
-            $this->otpRepository->deleteExpired();
+DB::transaction(function () use (
+    $countryCode,
+    $mobile,
+    $purpose,
+    $ipAddress,
+    $userAgent,
+    $plainOtp
+) {
 
-            $otp = random_int(100000,999999);
+// TODO: Move expired OTP cleanup to scheduled job.
+    $this->otpRepository->deleteExpired();
 
-            $this->otpRepository->create([
+    $count = $this->otpRepository->countActiveOtps(
+    $countryCode,
+    $mobile,
+    $purpose
+);
 
-                'uuid'=>Str::uuid(),
+if ($count > 0) {
 
-                'country_code'=>$countryCode,
+    throw new ApiException(
+        message: 'Please wait before requesting another OTP.',
+        status: 429,
+        errors: [
+            'code' => ErrorCode::OTP_RESEND_LIMIT->value,
+        ]
+    );
+}
 
-                'mobile'=>$mobile,
+    $this->otpRepository->create([
 
-                'purpose'=>$purpose,
+        'uuid' => Str::uuid(),
 
-                'otp'=>$otp,
+        'country_code' => $countryCode,
 
-                'attempts'=>0,
+        'mobile' => $mobile,
 
-                'expires_at'=>now()->addSeconds(
-                    config('gotaxi.otp.expiry')
-                ),
+        'purpose' => $purpose,
 
-                'ip_address'=>$ipAddress,
+        'otp' => Hash::make($plainOtp),
 
-                'user_agent'=>$userAgent
+        'attempts' => 0,
 
-            ]);
+        'expires_at' => now()->addSeconds(
+    (int) config('gotaxi.otp.expiry')
+),
 
-        });
+        'ip_address' => $ipAddress,
 
-        return [
+        'user_agent' => $userAgent,
 
-            'success'=>true,
+    ]);
 
-            'otp'=>$otp,
+});
+        $response = [
 
-            'expires_at'=>now()->addSeconds(
-                config('gotaxi.otp.expiry')
-            )
+                'expires_in' => (int) config('gotaxi.otp.expiry'),
+            ];
 
-        ];
+            if (config('gotaxi.otp.show_in_response')) {
+                $response['otp'] = $plainOtp;
+            }
+
+        return $response;
     }
 }

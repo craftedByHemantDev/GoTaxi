@@ -13,6 +13,9 @@ use App\Repositories\Eloquent\Auth\OtpRepository;
 use App\Services\Contracts\Auth\OTPServiceInterface;
 use App\Services\Auth\OTPService;
 
+use App\Services\Auth\AuthService;
+use App\Services\Contracts\Auth\AuthServiceInterface;
+
 class RepositoryServiceProvider extends ServiceProvider
 {
     public function register(): void
@@ -31,6 +34,11 @@ class RepositoryServiceProvider extends ServiceProvider
             OTPServiceInterface::class,
             OTPService::class
         );
+
+        $this->app->bind(
+    AuthServiceInterface::class,
+    AuthService::class
+);
     }
 
     public function boot(): void

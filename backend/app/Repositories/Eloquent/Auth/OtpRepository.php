@@ -20,7 +20,7 @@ class OtpRepository implements OtpRepositoryInterface
         return OtpVerification::where('country_code', $countryCode)
             ->where('mobile', $mobile)
             ->where('purpose', $purpose)
-            ->latest()
+            ->latest('id')
             ->first();
     }
 
@@ -42,4 +42,49 @@ class OtpRepository implements OtpRepositoryInterface
     {
         OtpVerification::where('expires_at', '<', now())->delete();
     }
+
+    public function findActiveOtp(
+    string $countryCode,
+    string $mobile,
+    string $purpose
+): ?OtpVerification {
+
+    return OtpVerification::query()
+
+        ->where('country_code', $countryCode)
+
+        ->where('mobile', $mobile)
+
+        ->where('purpose', $purpose)
+
+        ->whereNull('verified_at')
+
+        ->where('expires_at', '>', now())
+
+        ->latest('id')
+
+        ->first();
+
+}
+
+public function countActiveOtps(
+    string $countryCode,
+    string $mobile,
+    string $purpose
+): int {
+
+    return OtpVerification::query()
+
+        ->where('country_code', $countryCode)
+
+        ->where('mobile', $mobile)
+
+        ->where('purpose', $purpose)
+
+        ->whereNull('verified_at')
+
+        ->where('expires_at', '>', now())
+
+        ->count();
+}
 }
