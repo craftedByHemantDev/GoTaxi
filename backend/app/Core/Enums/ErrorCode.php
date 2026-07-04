@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Enums\Core;
+
+enum ErrorCode: string
+{
+    case VALIDATION_ERROR = 'VALIDATION_ERROR';
+
+    case OTP_EXPIRED = 'OTP_EXPIRED';
+
+    case OTP_INVALID = 'OTP_INVALID';
+
+    case OTP_MAX_ATTEMPTS = 'OTP_MAX_ATTEMPTS';
+
+    case OTP_RESEND_LIMIT = 'OTP_RESEND_LIMIT';
+
+    case UNAUTHORIZED = 'UNAUTHORIZED';
+
+    case USER_NOT_FOUND = 'USER_NOT_FOUND';
+
+    case SERVER_ERROR = 'SERVER_ERROR';
+}
