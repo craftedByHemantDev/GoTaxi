@@ -23,6 +23,11 @@ interface UserRepositoryInterface
     string $mobile
 ): bool;
 
+public function updateProfilePhoto(
+    User $user,
+    string $path
+): User;
+
 
 
 }

@@ -12,6 +12,8 @@ use App\Services\Contracts\Auth\AuthServiceInterface;
 use App\Services\Contracts\Auth\OTPServiceInterface;
 use Illuminate\Support\ServiceProvider;
 use App\Services\Contracts\User\UserServiceInterface;
+use App\Services\Contracts\Shared\FileStorageServiceInterface;
+use App\Services\Shared\FileStorageService;
 use App\Services\User\UserService;
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -41,6 +43,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
     UserServiceInterface::class,
     UserService::class
+);
+
+$this->app->bind(
+    FileStorageServiceInterface::class,
+    FileStorageService::class
 );
     }
 

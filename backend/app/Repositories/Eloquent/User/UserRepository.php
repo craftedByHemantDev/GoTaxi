@@ -47,5 +47,19 @@ class UserRepository implements UserRepositoryInterface
         ->exists();
 }
 
+public function updateProfilePhoto(
+    User $user,
+    string $path
+): User {
+
+    $user->update([
+
+        'profile_photo' => $path,
+
+    ]);
+
+    return $user->refresh();
+}
+
 
 }

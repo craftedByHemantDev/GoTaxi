@@ -15,4 +15,9 @@ Route::middleware('auth:sanctum')->group(function () {
     [UserController::class, 'updateProfile']
 );
 
+Route::post(
+    'profile-photo',
+    [UserController::class, 'uploadProfilePhoto']
+);
+
 });

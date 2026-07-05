@@ -7,12 +7,15 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Repositories\Contracts\User\UserRepositoryInterface;
+use Illuminate\Http\UploadedFile;
+use App\Services\Contracts\Shared\FileStorageServiceInterface;
 
 class UserService implements UserServiceInterface
 {
 
 public function __construct(
-    private readonly UserRepositoryInterface $userRepository
+    private readonly UserRepositoryInterface $userRepository,
+    private readonly FileStorageServiceInterface $fileStorageService
 ) {
 }
     public function profile(): array
@@ -47,4 +50,38 @@ public function updateProfile(array $data): array
 
     ];
 }
+
+
+public function uploadProfilePhoto(
+    UploadedFile $photo
+): array {
+
+    /** @var \App\Models\User $user */
+    $user = Auth::user();
+
+    // Delete old profile photo
+    $this->fileStorageService->delete(
+        $user->profile_photo
+    );
+
+    // Upload new photo
+    $path = $this->fileStorageService->upload(
+        $photo,
+        'profile-photos'
+    );
+
+    // Save in database
+    $user = $this->userRepository->updateProfilePhoto(
+        $user,
+        $path
+    );
+
+    return [
+
+        'user' => new UserResource($user),
+
+    ];
+}
+
+
 }

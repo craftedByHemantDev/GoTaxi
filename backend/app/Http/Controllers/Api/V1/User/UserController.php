@@ -7,12 +7,15 @@ use App\Core\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Actions\User\UpdateProfileAction;
 use App\Http\Requests\User\UpdateProfileRequest;
+use App\Actions\User\UploadProfilePhotoAction;
+use App\Http\Requests\User\UploadProfilePhotoRequest;
 
 class UserController extends Controller
 {
     public function __construct(
         private readonly GetProfileAction $getProfileAction,
-        private readonly UpdateProfileAction $updateProfileAction
+        private readonly UpdateProfileAction $updateProfileAction,
+        private readonly UploadProfilePhotoAction $uploadProfilePhotoAction
     ) {
     }
 
@@ -40,4 +43,24 @@ class UserController extends Controller
 
     );
 }
+
+public function uploadProfilePhoto(
+    UploadProfilePhotoRequest $request
+) {
+
+    return ApiResponse::success(
+
+        $this->uploadProfilePhotoAction->execute(
+
+            $request->file('photo')
+
+        ),
+
+        'Profile photo uploaded successfully.'
+
+    );
+
+}
+
+
 }

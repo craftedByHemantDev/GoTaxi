@@ -30,7 +30,9 @@ class UserResource extends JsonResource
 
             'email' => $this->email,
 
-            'profile_photo' => $this->profile_photo,
+            'profile_photo' => $this->profile_photo
+    ? asset('storage/'.$this->profile_photo)
+    : null,
 
             'preferred_language' => $this->preferred_language?->value,
 
