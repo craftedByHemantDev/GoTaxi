@@ -2,19 +2,17 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
-
-use App\Repositories\Contracts\User\UserRepositoryInterface;
-use App\Repositories\Eloquent\User\UserRepository;
-
 use App\Repositories\Contracts\Auth\OtpRepositoryInterface;
+use App\Repositories\Contracts\User\UserRepositoryInterface;
 use App\Repositories\Eloquent\Auth\OtpRepository;
-
-use App\Services\Contracts\Auth\OTPServiceInterface;
-use App\Services\Auth\OTPService;
-
+use App\Repositories\Eloquent\User\UserRepository;
 use App\Services\Auth\AuthService;
+use App\Services\Auth\OTPService;
 use App\Services\Contracts\Auth\AuthServiceInterface;
+use App\Services\Contracts\Auth\OTPServiceInterface;
+use Illuminate\Support\ServiceProvider;
+use App\Services\Contracts\User\UserServiceInterface;
+use App\Services\User\UserService;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -36,8 +34,13 @@ class RepositoryServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-    AuthServiceInterface::class,
-    AuthService::class
+            AuthServiceInterface::class,
+            AuthService::class
+        );
+
+        $this->app->bind(
+    UserServiceInterface::class,
+    UserService::class
 );
     }
 

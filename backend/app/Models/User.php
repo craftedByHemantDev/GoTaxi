@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\User\Language;
+use App\Enums\User\UserStatus;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -11,8 +13,6 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
-use App\Enums\User\UserStatus;
-use App\Enums\User\Language;
 
 class User extends Authenticatable
 {
@@ -20,6 +20,7 @@ class User extends Authenticatable
 
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
     use HasRoles;
     use HasUuids;
     use SoftDeletes;
@@ -30,21 +31,21 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-    'uuid',
-    'first_name',
-    'middle_name',
-    'last_name',
-    'display_name',
-    'country_code',
-    'mobile',
-    'email',
-    'password',
-    'profile_photo',
-    'gender',
-    'date_of_birth',
-    'preferred_language',
-    'status',
-];
+        'uuid',
+        'first_name',
+        'middle_name',
+        'last_name',
+        'display_name',
+        'country_code',
+        'mobile',
+        'email',
+        'password',
+        'profile_photo',
+        'gender',
+        'date_of_birth',
+        'preferred_language',
+        'status',
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -67,22 +68,22 @@ class User extends Authenticatable
     }
 
     protected function casts(): array
-{
-    return [
+    {
+        return [
 
-        'password' => 'hashed',
+            'password' => 'hashed',
 
-        'mobile_verified_at' => 'datetime',
+            'mobile_verified_at' => 'datetime',
 
-        'email_verified_at' => 'datetime',
+            'email_verified_at' => 'datetime',
 
-        'last_login_at' => 'datetime',
+            'last_login_at' => 'datetime',
 
-        'date_of_birth' => 'date',
+            'date_of_birth' => 'date',
 
-        'status' => UserStatus::class,
+            'status' => UserStatus::class,
 
-        'preferred_language' => Language::class,
-    ];
-}
+            'preferred_language' => Language::class,
+        ];
+    }
 }

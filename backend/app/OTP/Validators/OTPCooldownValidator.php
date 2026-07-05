@@ -3,7 +3,7 @@
 namespace App\OTP\Validators;
 
 use App\Core\Exceptions\ApiException;
-use App\Enums\Core\ErrorCode;
+use App\Core\Enums\ErrorCode;
 use App\Models\OtpVerification;
 
 class OTPCooldownValidator

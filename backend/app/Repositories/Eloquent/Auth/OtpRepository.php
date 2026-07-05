@@ -44,47 +44,88 @@ class OtpRepository implements OtpRepositoryInterface
     }
 
     public function findActiveOtp(
-    string $countryCode,
-    string $mobile,
-    string $purpose
+        string $countryCode,
+        string $mobile,
+        string $purpose
+    ): ?OtpVerification {
+
+        return OtpVerification::query()
+
+            ->where('country_code', $countryCode)
+
+            ->where('mobile', $mobile)
+
+            ->where('purpose', $purpose)
+
+            ->whereNull('verified_at')
+
+            ->where('expires_at', '>', now())
+
+            ->latest('id')
+
+            ->first();
+
+    }
+
+    public function countActiveOtps(
+        string $countryCode,
+        string $mobile,
+        string $purpose
+    ): int {
+
+        return OtpVerification::query()
+
+            ->where('country_code', $countryCode)
+
+            ->where('mobile', $mobile)
+
+            ->where('purpose', $purpose)
+
+            ->whereNull('verified_at')
+
+            ->where('expires_at', '>', now())
+
+            ->count();
+    }
+
+    public function findLatestActive(
+        string $countryCode,
+        string $mobile,
+        string $purpose
+    ): ?OtpVerification {
+        return OtpVerification::query()
+            ->where('country_code', $countryCode)
+            ->where('mobile', $mobile)
+            ->where('purpose', $purpose)
+            ->whereNull('verified_at')
+            ->where('expires_at', '>', now())
+            ->latest('id')
+            ->first();
+    }
+
+    public function findByVerificationToken(
+    string $token
 ): ?OtpVerification {
 
     return OtpVerification::query()
 
-        ->where('country_code', $countryCode)
+        ->where('verification_token', $token)
 
-        ->where('mobile', $mobile)
-
-        ->where('purpose', $purpose)
-
-        ->whereNull('verified_at')
-
-        ->where('expires_at', '>', now())
+        ->whereNotNull('verified_at')
 
         ->latest('id')
 
         ->first();
-
 }
 
-public function countActiveOtps(
-    string $countryCode,
-    string $mobile,
-    string $purpose
-): int {
+public function deleteByVerificationToken(
+    string $token
+): void {
 
-    return OtpVerification::query()
+    OtpVerification::query()
 
-        ->where('country_code', $countryCode)
+        ->where('verification_token', $token)
 
-        ->where('mobile', $mobile)
-
-        ->where('purpose', $purpose)
-
-        ->whereNull('verified_at')
-
-        ->where('expires_at', '>', now())
-
-        ->count();
+        ->delete();
 }
 }

@@ -8,8 +8,7 @@ use App\Repositories\Contracts\Auth\OtpRepositoryInterface;
 use App\Services\Contracts\Auth\OTPServiceInterface;
 use Illuminate\Support\Facades\Hash;
 use App\Core\Exceptions\ApiException;
-use App\Enums\Core\ErrorCode;
-
+use App\Core\Enums\ErrorCode;
 
 class OTPService implements OTPServiceInterface
 {
@@ -28,60 +27,60 @@ class OTPService implements OTPServiceInterface
 
         $plainOtp = (string) random_int(100000, 999999);
 
-DB::transaction(function () use (
-    $countryCode,
-    $mobile,
-    $purpose,
-    $ipAddress,
-    $userAgent,
-    $plainOtp
-) {
+    DB::transaction(function () use (
+        $countryCode,
+        $mobile,
+        $purpose,
+        $ipAddress,
+        $userAgent,
+        $plainOtp
+    ) {
 
-// TODO: Move expired OTP cleanup to scheduled job.
-    $this->otpRepository->deleteExpired();
+    // TODO: Move expired OTP cleanup to scheduled job.
+        $this->otpRepository->deleteExpired();
 
-    $count = $this->otpRepository->countActiveOtps(
-    $countryCode,
-    $mobile,
-    $purpose
-);
-
-if ($count > 0) {
-
-    throw new ApiException(
-        message: 'Please wait before requesting another OTP.',
-        status: 429,
-        errors: [
-            'code' => ErrorCode::OTP_RESEND_LIMIT->value,
-        ]
+        $count = $this->otpRepository->countActiveOtps(
+        $countryCode,
+        $mobile,
+        $purpose
     );
-}
 
-    $this->otpRepository->create([
+    if ($count > 0) {
 
-        'uuid' => Str::uuid(),
+        throw new ApiException(
+            message: 'Please wait before requesting another OTP.',
+            status: 429,
+            errors: [
+                'code' => ErrorCode::OTP_RESEND_LIMIT->value,
+            ]
+        );
+    }
 
-        'country_code' => $countryCode,
+        $this->otpRepository->create([
 
-        'mobile' => $mobile,
+            'uuid' => Str::uuid(),
 
-        'purpose' => $purpose,
+            'country_code' => $countryCode,
 
-        'otp' => Hash::make($plainOtp),
+            'mobile' => $mobile,
 
-        'attempts' => 0,
+            'purpose' => $purpose,
 
-        'expires_at' => now()->addSeconds(
-    (int) config('gotaxi.otp.expiry')
-),
+            'otp' => Hash::make($plainOtp),
 
-        'ip_address' => $ipAddress,
+            'attempts' => 0,
 
-        'user_agent' => $userAgent,
+            'expires_at' => now()->addSeconds(
+        (int) config('gotaxi.otp.expiry')
+    ),
 
-    ]);
+            'ip_address' => $ipAddress,
 
-});
+            'user_agent' => $userAgent,
+
+        ]);
+
+    });
         $response = [
 
                 'expires_in' => (int) config('gotaxi.otp.expiry'),
@@ -93,4 +92,88 @@ if ($count > 0) {
 
         return $response;
     }
+
+    public function verify(
+    string $countryCode,
+    string $mobile,
+    string $purpose,
+    string $otp
+    ): array {
+
+    $record = $this->otpRepository->findLatestActive(
+        $countryCode,
+        $mobile,
+        $purpose
+    );
+
+    if (! $record) {
+        throw new ApiException(
+            message: 'OTP not found or expired.',
+            status: 422,
+            errors: [
+                'code' => ErrorCode::OTP_INVALID->value,
+            ]
+        );
+    }
+
+    if (! Hash::check($otp, $record->otp)) {
+
+        $this->otpRepository->update($record, [
+            'attempts' => $record->attempts + 1,
+        ]);
+
+        throw new ApiException(
+            message: 'Invalid OTP.',
+            status: 422,
+            errors: [
+                'code' => ErrorCode::OTP_INVALID->value,
+            ]
+        );
+    }
+
+   $this->otpRepository->update($record, [
+
+    'verified_at' => now(),
+
+    'verification_token' => (string) Str::uuid(),
+
+]);
+
+
+return [
+
+    'verified' => true,
+
+    'verification_token' => $record->verification_token,
+
+];
 }
+
+public function getVerifiedRecord(
+    string $verificationToken
+) {
+    $record = $this->otpRepository->findByVerificationToken(
+        $verificationToken
+    );
+
+    if (! $record) {
+
+        throw new ApiException(
+
+            message: 'Invalid verification token.',
+
+            status: 422,
+
+            errors: [
+
+                'code' => ErrorCode::OTP_INVALID->value,
+
+            ]
+
+        );
+    }
+
+    return $record;
+}
+}
+

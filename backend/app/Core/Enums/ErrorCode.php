@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Enums\Core;
+namespace App\Core\Enums;
 
 enum ErrorCode: string
 {
@@ -19,4 +19,6 @@ enum ErrorCode: string
     case USER_NOT_FOUND = 'USER_NOT_FOUND';
 
     case SERVER_ERROR = 'SERVER_ERROR';
+
+    case USER_ALREADY_EXISTS = 'USER_ALREADY_EXISTS';
 }

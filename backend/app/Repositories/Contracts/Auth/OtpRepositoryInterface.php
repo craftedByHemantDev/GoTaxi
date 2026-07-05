@@ -24,14 +24,28 @@ interface OtpRepositoryInterface
     public function deleteExpired(): void;
 
     public function findActiveOtp(
-    string $countryCode,
-    string $mobile,
-    string $purpose
+        string $countryCode,
+        string $mobile,
+        string $purpose
+    ): ?OtpVerification;
+
+    public function countActiveOtps(
+        string $countryCode,
+        string $mobile,
+        string $purpose
+    ): int;
+
+    public function findLatestActive(
+        string $countryCode,
+        string $mobile,
+        string $purpose
+    ): ?OtpVerification;
+
+    public function findByVerificationToken(
+    string $token
 ): ?OtpVerification;
 
-public function countActiveOtps(
-    string $countryCode,
-    string $mobile,
-    string $purpose
-): int;
+public function deleteByVerificationToken(
+    string $token
+): void;
 }

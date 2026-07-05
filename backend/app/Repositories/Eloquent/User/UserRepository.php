@@ -7,42 +7,45 @@ use App\Repositories\Contracts\User\UserRepositoryInterface;
 
 class UserRepository implements UserRepositoryInterface
 {
+    public function findByMobile(
+        string $countryCode,
+        string $mobile
+    ): ?User {
+
+        return User::query()
+            ->where('country_code', $countryCode)
+            ->where('mobile', $mobile)
+            ->first();
+    }
+
     public function create(array $data): User
     {
         return User::create($data);
     }
 
-    public function update(User $user, array $data): User
-    {
+    public function update(
+        User $user,
+        array $data
+    ): User {
+
         $user->update($data);
 
         return $user->refresh();
     }
 
-    public function findById(int $id): ?User
-    {
-        return User::find($id);
-    }
+    public function existsByMobile(
+    string $countryCode,
+    string $mobile
+): bool {
 
-    public function findByUuid(string $uuid): ?User
-    {
-        return User::where('uuid', $uuid)->first();
-    }
+    return User::query()
 
-    public function findByMobile(string $countryCode, string $mobile): ?User
-    {
-        return User::where('country_code', $countryCode)
-            ->where('mobile', $mobile)
-            ->first();
-    }
+        ->where('country_code', $countryCode)
 
-    public function findByEmail(string $email): ?User
-    {
-        return User::where('email', $email)->first();
-    }
+        ->where('mobile', $mobile)
 
-    public function delete(User $user): bool
-    {
-        return (bool) $user->delete();
-    }
+        ->exists();
+}
+
+
 }

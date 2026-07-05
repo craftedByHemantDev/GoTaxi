@@ -11,38 +11,38 @@ return new class extends Migration
      */
     public function up(): void
     {
-       Schema::create('otp_verifications', function (Blueprint $table) {
+        Schema::create('otp_verifications', function (Blueprint $table) {
 
-    $table->id();
+            $table->id();
 
-    $table->uuid('uuid')->unique();
+            $table->uuid('uuid')->unique();
 
-    $table->string('country_code',10)->index();
+            $table->string('country_code', 10)->index();
 
-    $table->string('mobile',20)->index();
+            $table->string('mobile', 20)->index();
 
-    $table->string('otp',255);
+            $table->string('otp', 255);
 
-    $table->string('purpose',30)->index();
+            $table->string('purpose', 30)->index();
 
-    $table->unsignedTinyInteger('attempts')->default(0);
+            $table->unsignedTinyInteger('attempts')->default(0);
 
-    $table->timestamp('expires_at');
+            $table->timestamp('expires_at');
 
-    $table->timestamp('verified_at')->nullable();
+            $table->timestamp('verified_at')->nullable();
 
-    $table->string('ip_address',45)->nullable();
+            $table->string('ip_address', 45)->nullable();
 
-    $table->text('user_agent')->nullable();
+            $table->text('user_agent')->nullable();
 
-    $table->timestamps();
+            $table->timestamps();
 
-    $table->index([
-        'country_code',
-        'mobile',
-        'purpose'
-    ]);
-});
+            $table->index([
+                'country_code',
+                'mobile',
+                'purpose',
+            ]);
+        });
     }
 
     /**
