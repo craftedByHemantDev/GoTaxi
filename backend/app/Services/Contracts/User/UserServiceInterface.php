@@ -13,4 +13,8 @@ interface UserServiceInterface
 public function uploadProfilePhoto(
     UploadedFile $photo
 ): array;
+
+public function deleteProfilePhoto(): array;
+
+
 }

@@ -29,5 +29,11 @@ public function updateProfilePhoto(
 ): User;
 
 
+public function removeProfilePhoto(
+    User $user
+): User;
+
+
+
 
 }

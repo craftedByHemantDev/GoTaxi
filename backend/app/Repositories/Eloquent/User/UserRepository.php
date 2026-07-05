@@ -62,4 +62,19 @@ public function updateProfilePhoto(
 }
 
 
+public function removeProfilePhoto(
+    User $user
+): User {
+
+    $user->update([
+
+        'profile_photo' => null,
+
+    ]);
+
+    return $user->refresh();
+}
+
+
+
 }

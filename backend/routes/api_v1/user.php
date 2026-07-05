@@ -20,4 +20,9 @@ Route::post(
     [UserController::class, 'uploadProfilePhoto']
 );
 
+Route::delete(
+    'profile-photo',
+    [UserController::class, 'deleteProfilePhoto']
+);
+
 });

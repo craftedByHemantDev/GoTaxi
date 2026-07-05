@@ -9,13 +9,15 @@ use App\Actions\User\UpdateProfileAction;
 use App\Http\Requests\User\UpdateProfileRequest;
 use App\Actions\User\UploadProfilePhotoAction;
 use App\Http\Requests\User\UploadProfilePhotoRequest;
+use App\Actions\User\DeleteProfilePhotoAction;
 
 class UserController extends Controller
 {
     public function __construct(
         private readonly GetProfileAction $getProfileAction,
         private readonly UpdateProfileAction $updateProfileAction,
-        private readonly UploadProfilePhotoAction $uploadProfilePhotoAction
+        private readonly UploadProfilePhotoAction $uploadProfilePhotoAction,
+        private readonly DeleteProfilePhotoAction $deleteProfilePhotoAction
     ) {
     }
 
@@ -60,6 +62,17 @@ public function uploadProfilePhoto(
 
     );
 
+}
+
+public function deleteProfilePhoto()
+{
+    return ApiResponse::success(
+
+        $this->deleteProfilePhotoAction->execute(),
+
+        'Profile photo deleted successfully.'
+
+    );
 }
 
 

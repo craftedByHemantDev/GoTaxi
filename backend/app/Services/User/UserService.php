@@ -84,4 +84,24 @@ public function uploadProfilePhoto(
 }
 
 
+public function deleteProfilePhoto(): array
+{
+    /** @var User $user */
+    $user = Auth::user();
+
+    $this->fileStorageService->delete(
+        $user->profile_photo
+    );
+
+    $user = $this->userRepository->removeProfilePhoto(
+        $user
+    );
+
+    return [
+
+        'user' => new UserResource($user),
+
+    ];
+}
+
 }
