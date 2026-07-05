@@ -13,6 +13,7 @@ use Illuminate\Support\Str;
 use App\Repositories\Contracts\User\UserRepositoryInterface;
 use App\Core\Enums\ErrorCode;
 use App\Core\Exceptions\ApiException;
+use Illuminate\Support\Facades\Auth;
 use App\Services\Auth\OTPService;
 use App\Enums\User\UserStatus;
 use App\Repositories\Contracts\Auth\OtpRepositoryInterface;
@@ -128,5 +129,15 @@ public function completeProfile(array $data): array
     });
 }
 
+
+public function logout(): void
+{
+    /** @var \App\Models\User $user */
+    $user = Auth::user();
+
+    $user
+        ->currentAccessToken()
+        ->delete();
+}
 
 }

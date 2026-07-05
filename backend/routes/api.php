@@ -30,6 +30,12 @@ Route::post(
 );
 
 
+Route::post(
+    'logout',
+    [AuthController::class, 'logout']
+)->middleware('auth:sanctum');
+
+
 });
 
 

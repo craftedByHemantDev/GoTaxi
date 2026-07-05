@@ -10,6 +10,7 @@ use App\Http\Requests\Auth\SendLoginOtpRequest;
 use App\Http\Requests\Auth\VerifyLoginOtpRequest;
 use App\Actions\Auth\CompleteProfileAction;
 use App\Http\Requests\Auth\CompleteProfileRequest;
+use App\Actions\Auth\LogoutAction;
 
 class AuthController extends Controller
 {
@@ -17,6 +18,8 @@ class AuthController extends Controller
         private readonly SendLoginOtpAction $sendLoginOtpAction,
         private readonly VerifyLoginOtpAction $verifyLoginOtpAction,
         private readonly CompleteProfileAction $completeProfileAction,
+        private readonly LogoutAction $logoutAction
+
     ) {}
 
     public function sendLoginOtp(
@@ -64,4 +67,20 @@ class AuthController extends Controller
 
     );
 }
+
+
+public function logout()
+{
+    $this->logoutAction->execute();
+
+    return ApiResponse::success(
+
+        [],
+
+        'Logged out successfully.'
+
+    );
+}
+
+
 }

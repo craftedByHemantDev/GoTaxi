@@ -16,4 +16,6 @@ interface AuthServiceInterface
     ): array;
 
     public function completeProfile(array $data): array;
+
+    public function logout(): void;
 }

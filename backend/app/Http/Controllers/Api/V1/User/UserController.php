@@ -10,6 +10,7 @@ use App\Http\Requests\User\UpdateProfileRequest;
 use App\Actions\User\UploadProfilePhotoAction;
 use App\Http\Requests\User\UploadProfilePhotoRequest;
 use App\Actions\User\DeleteProfilePhotoAction;
+use App\Actions\Auth\LogoutAction;
 
 class UserController extends Controller
 {
@@ -17,8 +18,7 @@ class UserController extends Controller
         private readonly GetProfileAction $getProfileAction,
         private readonly UpdateProfileAction $updateProfileAction,
         private readonly UploadProfilePhotoAction $uploadProfilePhotoAction,
-        private readonly DeleteProfilePhotoAction $deleteProfilePhotoAction
-    ) {
+        private readonly DeleteProfilePhotoAction $deleteProfilePhotoAction    ) {
     }
 
     public function profile()
@@ -74,6 +74,9 @@ public function deleteProfilePhoto()
 
     );
 }
+
+
+
 
 
 }
