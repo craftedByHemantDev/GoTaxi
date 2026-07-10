@@ -86,4 +86,9 @@ class User extends Authenticatable
             'preferred_language' => Language::class,
         ];
     }
+
+    public function driver()
+{
+    return $this->hasOne(Driver::class);
+}
 }

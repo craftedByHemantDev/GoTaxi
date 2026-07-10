@@ -15,6 +15,23 @@ use App\Services\Contracts\User\UserServiceInterface;
 use App\Services\Contracts\Shared\FileStorageServiceInterface;
 use App\Services\Shared\FileStorageService;
 use App\Services\User\UserService;
+use App\Repositories\Contracts\Driver\DriverRepositoryInterface;
+use App\Repositories\Eloquent\Driver\DriverRepository;
+use App\Services\Contracts\Driver\DriverServiceInterface;
+use App\Services\Driver\DriverService;
+use App\Repositories\Contracts\Driver\DriverDocumentRepositoryInterface;
+use App\Repositories\Eloquent\Driver\DriverDocumentRepository;
+use App\Services\Contracts\Driver\DriverDocumentServiceInterface;
+use App\Services\Driver\DriverDocumentService;
+use App\Services\Contracts\Driver\DriverVerificationServiceInterface;
+use App\Services\Driver\DriverVerificationService;
+use App\Repositories\Contracts\Driver\DriverVehicleRepositoryInterface;
+use App\Repositories\Eloquent\Driver\DriverVehicleRepository;
+use App\Services\Contracts\Driver\DriverVehicleServiceInterface;
+use App\Services\Driver\DriverVehicleService;
+
+use App\Repositories\Contracts\Driver\DriverVehicleDocumentRepositoryInterface;
+use App\Repositories\Driver\DriverVehicleDocumentRepository;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -49,6 +66,58 @@ $this->app->bind(
     FileStorageServiceInterface::class,
     FileStorageService::class
 );
+
+$this->app->bind(
+    DriverRepositoryInterface::class,
+    DriverRepository::class
+);
+
+$this->app->bind(
+
+    DriverVerificationServiceInterface::class,
+
+    DriverVerificationService::class
+
+);
+
+$this->app->bind(
+    DriverServiceInterface::class,
+    DriverService::class
+);
+
+$this->app->bind(
+    DriverDocumentRepositoryInterface::class,
+    DriverDocumentRepository::class
+);
+
+
+$this->app->bind(
+    DriverDocumentServiceInterface::class,
+    DriverDocumentService::class
+);
+
+$this->app->bind(
+
+    DriverVehicleRepositoryInterface::class,
+
+    DriverVehicleRepository::class
+
+);
+
+$this->app->bind(
+
+    DriverVehicleServiceInterface::class,
+
+    DriverVehicleService::class
+
+);
+
+$this->app->bind(
+        DriverVehicleDocumentRepositoryInterface::class,
+        DriverVehicleDocumentRepository::class
+    );
+    
+
     }
 
     public function boot(): void

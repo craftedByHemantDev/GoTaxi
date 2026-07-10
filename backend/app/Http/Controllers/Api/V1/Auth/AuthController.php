@@ -11,6 +11,7 @@ use App\Http\Requests\Auth\VerifyLoginOtpRequest;
 use App\Actions\Auth\CompleteProfileAction;
 use App\Http\Requests\Auth\CompleteProfileRequest;
 use App\Actions\Auth\LogoutAction;
+use App\Actions\Auth\LogoutAllDevicesAction;
 
 class AuthController extends Controller
 {
@@ -18,7 +19,8 @@ class AuthController extends Controller
         private readonly SendLoginOtpAction $sendLoginOtpAction,
         private readonly VerifyLoginOtpAction $verifyLoginOtpAction,
         private readonly CompleteProfileAction $completeProfileAction,
-        private readonly LogoutAction $logoutAction
+        private readonly LogoutAction $logoutAction,
+        private readonly LogoutAllDevicesAction $logoutAllDevicesAction,
 
     ) {}
 
@@ -81,6 +83,21 @@ public function logout()
 
     );
 }
+
+
+public function logoutAllDevices()
+{
+    $this->logoutAllDevicesAction->execute();
+
+    return ApiResponse::success(
+
+        [],
+
+        'Logged out from all devices successfully.'
+
+    );
+}
+
 
 
 }

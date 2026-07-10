@@ -18,4 +18,6 @@ interface AuthServiceInterface
     public function completeProfile(array $data): array;
 
     public function logout(): void;
+
+    public function logoutAllDevices(): void;
 }
